@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Gratitude Loop</title>
+    <meta name="description" content="Share and receive anonymous messages of gratitude, kindness, and encouragement.">
+    <meta name="theme-color" content="#FFD700">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <style>
+        /* Existing CSS styles - unchanged for brevity */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            border: 1px solid #e0e0e0;
+        }
+
+        h1, h2, h3 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .message-feed {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .message-card {
+            background-color: #f9f9f9;
+            border: 1px solid #e5e5e5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+
+        .message-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .message-card p {
+            font-size: 1.1em;
+            color: #444;
+            margin-bottom: 15px;
+        }
+
+        .message-meta {
+            font-size: 0.9em;
+            color: #777;
+            text-align: right;
+            border-top: 1px solid #eee;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        .sponsor-options, .payment-options {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fdfdfd;
+        }
+
+        .sponsor-options label {
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 0;
+        }
+
+        .sponsor-options input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .sponsor-options select, .sponsor-options input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+            margin-left: 10px;
+            box-sizing: border-box;
+            max-width: 200px;
+        }
+
+        .payment-options div label {
+            margin-bottom: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 1.1em;
+        }
+
+        .payment-options input[type="radio"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+
+        .payment-icons img {
+            height: 24px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        #card-details-form {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px dashed #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        #card-details-form input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .saved-messages-section,
+        .affirmation-pack-section,
+        .joy-tokens-section,
+        .gratitude-capsule-section {
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 30px;
+        }
+
+        .saved-message-card {
+            background-color: #e8f5e9;
+            border: 1px solid #c8e6c9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .affirmation-pack-card {
+            background-color: #e3f2fd;
+            border: 1px solid #bbdefb;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .joy-tokens-section {
+            text-align: center;
+        }
+
+        #joy-token-balance {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #e67e22;
+            margin-bottom: 15px;
+        }
+
+        #purchase-tokens-amount {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+            margin-right: 10px;
+            width: 100px;
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                margin: 10px;
+            }
+
+            .container {
+                padding: 15px;
+                border-radius: 0;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.4em;
+            }
+
+            textarea {
+                min-height: 80px;
+                margin-bottom: 15px;
+            }
+
+            button {
+                padding: 10px 15px;
+                font-size: 16px;
+                margin-top: 15px;
+            }
+
+            .payment-options label {
+                font-size: 0.95em;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .payment-icons {
+                margin-top: 5px;
+                margin-left: 0;
+            }
+
+            input[type="text"],
+            select {
+                width: 100% !important;
+                margin-left: 0 !important;
+                margin-top: 10px;
+            }
+
+            .sponsor-options {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .sponsor-options label {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+
+            .sponsor-options select,
+            .sponsor-options input[type="text"] {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Gratitude Loop</h1>
+
+        <section class="gratitude-message-section">
+            <h2>Send an Anonymous Message</h2>
+            <textarea id="gratitude-message" placeholder="Type your anonymous message of gratitude, kindness, or encouragement here..." aria-label="Enter your anonymous gratitude, kindness, or encouragement message"></textarea>
+
+            <div class="sponsor-options">
+                <label for="sponsor-message">
+                    <input type="checkbox" id="sponsor-message" aria-labelledby="sponsor-message-label">
+                    <span id="sponsor-message-label">Sponsor this message:</span>
+                </label>
+                <select id="sponsorship-duration" aria-label="Select sponsorship duration">
+                    <option value="24">24 hours ($5)</option>
+                    <option value="48">48 hours ($8)</option>
+                    <option value="72">72 hours ($10)</option>
+                </select>
+                <input type="text" id="sponsored-by-name" placeholder="Your Name (Optional)" aria-label="Optional: Enter your name for sponsorship">
+            </div>
+
+            <div class="payment-options">
+                <h3>Select Payment Method</h3>
+                <div>
+                    <label>
+                        <input type="radio" name="payment-method" value="credit_debit" checked aria-label="Select Credit or Debit Card payment method">
+                        Credit/Debit Card
+                        <span class="payment-icons" role="img" aria-label="Credit Card Payment Icons: MasterCard, Visa, American Express">
+                            <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="MasterCard" title="MasterCard">
+                            <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa" title="Visa">
+                            <img src="https://img.icons8.com/color/48/000000/american-express.png" alt="American Express" title="American Express">
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="payment-method" value="paypal" aria-label="Select PayPal payment method">
+                        PayPal
+                        <span class="payment-icons" role="img" aria-label="PayPal Payment Icon">
+                            <img src="https://img.icons8.com/color/48/000000/paypal.png" alt="PayPal" title="PayPal">
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="payment-method" value="google_pay" aria-label="Select Google Pay method">
+                        Google Pay
+                        <span class="payment-icons" role="img" aria-label="Google Pay Payment Icon">
+                            <img src="https://img.icons8.com/color/48/000000/google-pay.png" alt="Google Pay" title="Google Pay">
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="payment-method" value="apple_pay" aria-label="Select Apple Pay method">
+                        Apple Pay
+                        <span class="payment-icons" role="img" aria-label="Apple Pay Payment Icon">
+                            <img src="https://img.icons8.com/color/48/000000/apple-pay.png" alt="Apple Pay" title="Apple Pay">
+                        </span>
+                    </label>
+                </div>
+            </div>
+
+            <div id="card-details-form">
+                <h4>Card Details</h4>
+                <input type="text" id="card-number" placeholder="Card Number" aria-label="Enter card number" pattern="[0-9]{13,19}" required>
+                <input type="text" id="expiry-date" placeholder="MM/YY" aria-label="Enter expiry date in MM/YY format" pattern="(0[1-9]|1[0-2])\/[0-9]{2}" required>
+                <input type="text" id="cvv" placeholder="CVV" aria-label="Enter CVV" pattern="[0-9]{3,4}" required>
+            </div>
+
+            <button id="send-message-btn" type="button" aria-label="Send Gratitude Message">Send Message</button>
+        </section>
+
+        <section class="message-feed">
+            <h2>Anonymous Message Feed</h2>
+            <div id="messages-container" aria-live="polite">
+                <div class="message-card" role="article" aria-labelledby="message-1-content">
+                    <p id="message-1-content">"You are doing great! Keep up the positive energy."</p>
+                    <div class="message-meta">Sent by Anonymous on 2025-06-27 10:30 AM</div>
+                    <button class="save-message-btn" type="button" data-message-id="msg1" aria-label="Save this message">Save</button>
+                    <button class="reply-message-btn" type="button" data-message-id="msg1" aria-label="Reply to this message">Reply</button>
+                </div>
+                <div class="message-card sponsored" role="article" aria-labelledby="message-2-content">
+                    <p id="message-2-content">"Your kindness shines brightly."</p>
+                    <div class="message-meta">Sponsored by John Doe on 2025-06-26 05:00 PM</div>
+                    <button class="save-message-btn" type="button" data-message-id="msg2" aria-label="Save this message">Save</button>
+                    <button class="reply-message-btn" type="button" data-message-id="msg2" aria-label="Reply to this message">Reply</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="saved-messages-section">
+            <h2>My Saved Messages</h2>
+            <div id="saved-messages-container" aria-live="polite">
+                <div class="saved-message-card" role="article" aria-labelledby="saved-message-1-content">
+                    <p id="saved-message-1-content">"Thank you for being you!"</p>
+                    <div class="message-meta">Original: Anonymous on 2025-06-25 09:00 AM</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="affirmation-pack-section">
+            <h2>Affirmation Packs</h2>
+            <div id="affirmation-packs-container">
+                <div class="affirmation-pack-card" role="group" aria-labelledby="pack-1-title">
+                    <h3 id="pack-1-title">Daily Positivity Pack</h3>
+                    <p>Boost your mood with daily affirmations focusing on joy and well-being.</p>
+                    <button class="unlock-pack-btn" type="button" data-pack-id="pack1" data-pack-price="10" aria-label="Unlock Daily Positivity Pack for 10 Joy Tokens">Unlock (10 Joy Tokens)</button>
+                </div>
+                <div class="affirmation-pack-card" role="group" aria-labelledby="pack-2-title">
+                    <h3 id="pack-2-title">Inner Peace Collection</h3>
+                    <p>Find calm and serenity with affirmations for mindfulness and tranquility.</p>
+                    <button class="unlock-pack-btn" type="button" data-pack-id="pack2" data-pack-price="15" aria-label="Unlock Inner Peace Collection for 15 Joy Tokens">Unlock (15 Joy Tokens)</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="joy-tokens-section">
+            <h2>Your Joy Tokens</h2>
+            <p id="joy-token-balance" aria-live="polite">Current Balance: 50 Joy Tokens</p>
+            <div>
+                <label for="purchase-tokens-amount">Purchase Tokens:</label>
+                <input type="number" id="purchase-tokens-amount" value="10" min="10" step="10" aria-label="Enter amount of Joy Tokens to purchase">
+                <button id="purchase-tokens-btn" type="button" aria-label="Purchase Joy Tokens">Purchase Joy Tokens ($1 = 10 Tokens)</button>
+            </div>
+        </section>
+
+        <section class="gratitude-capsule-section">
+            <h2>Your Gratitude Capsule</h2>
+            <p>Gather your favorite saved messages and affirmations into a personalized Gratitude Capsule.</p>
+            <button id="generate-capsule-btn" type="button" aria-label="Generate My Gratitude Capsule">Generate My Gratitude Capsule</button>
+        </section>
+    </div>
+
+    <!-- Firebase SDK v12.2.1 (Modular SDK) -->
+    <script type="module">
+        // Import Firebase libraries
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js';
+
+        // Firebase configuration (replace with your actual config)
+        const firebaseConfig = {
+            apiKey: "AlzaSyAyYDfiZmVe36MZIMp8VszskvM8vrowNXw",
+            authDomain: "gratitude-loop.firebaseapp.com",
+            projectId: "gratitude-loop",
+            storageBucket: "gratitude-loop.firebasestorage.app",
+            messagingSenderId: "434392316386",
+            appId: "1:434392316386:web:50f914ac9baf9d743561bb",
+            measurementId: "G-J8CHB2CD5H"
+        };
+
+        // Initialize Firebase
+        try {
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+            const analytics = getAnalytics(app);
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Error initializing Firebase:", error);
+        }
+    </script>
+    <script src="main.js" defer></script>
+</body>
+</html>
